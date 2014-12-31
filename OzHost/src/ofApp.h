@@ -1,13 +1,28 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxLibwebsockets.h"
+#include "ofxAppUtils.h"
 
-class ofApp : public ofBaseApp{
+#include "scenes.h"
+
+class twinkleScene;
+
+class ofApp : public ofxApp{
 
 	public:
 		void setup();
 		void update();
 		void draw();
+    
+    void onConnect(ofxLibwebsockets::Event & e);
+    void onOpen(ofxLibwebsockets::Event & e){};
+    void onClose(ofxLibwebsockets::Event & e);
+    void onMessage(ofxLibwebsockets::Event & e);
+    void onIdle(ofxLibwebsockets::Event & e){};
+    void onBroadcast(ofxLibwebsockets::Event & e){};
+
+
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -19,4 +34,19 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+private:
+    //ofxLibwebsockets::Server socket;
+    ofxLibwebsockets::Client socket;
+    
+    int startTime, localTime, remoteTime;
+    int retryCounter, retryAfter;
+    
+    void resync(int time){
+        localTime = time;
+        startTime = ofGetElapsedTimeMillis()-localTime;
+        cout<< "synced" <<endl;
+    };
+    
+    ofxSceneManager sm;
+    twinkleScene * twinkle;
 };
