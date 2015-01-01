@@ -7,6 +7,7 @@
 #include "scenes.h"
 
 class twinkleScene;
+class NoPlaceScene;
 
 class ofApp : public ofxApp{
 
@@ -41,6 +42,8 @@ private:
     int startTime, localTime, remoteTime;
     int retryCounter, retryAfter;
     
+
+    
     void resync(int time){
         localTime = time;
         startTime = ofGetElapsedTimeMillis()-localTime;
@@ -49,4 +52,5 @@ private:
     
     ofxSceneManager sm;
     twinkleScene * twinkle;
+    NoPlaceScene * noPlace;
 };

@@ -26,7 +26,9 @@ void ofApp::setup(){
     ofSetLogLevel("ofxSceneManager", OF_LOG_VERBOSE);
     sm.setup();
     twinkle = (twinkleScene*)sm.add(new twinkleScene() );
-    sm.gotoScene("twinkle");
+    noPlace = (NoPlaceScene*)sm.add(new NoPlaceScene());
+    sm.add(new SyncScene(&localTime));
+    sm.gotoScene("NoPlace");
 
     
 }
@@ -36,12 +38,11 @@ void ofApp::update(){
     localTime = ofGetElapsedTimeMillis()-startTime;
     
     if (!socket.isConnected() && retryCounter>retryAfter) {
-        socket.connect("ozcloud.takethefort.com");
+        socket.connect("localhost");
         retryCounter=0;
-    } else if (!socket.isConnected()){
+    } else if (!socket.isConnected() && retryCounter < retryAfter){
         retryCounter++;
     }
-    
     ofSetWindowTitle("ozHost | fps: " + ofToString(ofGetFrameRate()) );
     
     
@@ -53,11 +54,13 @@ void ofApp::draw(){
     
     sm.draw();
     
-    //ofDrawCircle(ofGetWidth()/2 +sin(localTime*0.001)*ofGetWidth()/2, ofGetHeight()/2, 50);
+   
 }
 
 void ofApp::onConnect(ofxLibwebsockets::Event & e){
     cout<< e.conn.getClientName()<<" connected!"<<endl;
+    retryCounter =0;
+    
 }
 
 void ofApp::onMessage(ofxLibwebsockets::Event & e){
@@ -73,12 +76,28 @@ void ofApp::onMessage(ofxLibwebsockets::Event & e){
     } else if (msg[0] =="/welcome"){
         socket.send("/imHost");
 
+    } else if (msg[0] == "/sceneChange" ){
+        switch (ofToInt(msg[1])){
+            case 4:
+                sm.gotoScene("sync");
+                break;
+            case 5:
+                sm.gotoScene("NoPlace");
+                break;
+            case 6:
+                sm.gotoScene("twinkle");
+                break;
+            default:
+                cout<<"scene changed to empty scene: "<<msg[1]<<endl;
+        }
+    } else if(msg[0] == "/home"){
+        noPlace->addHome(msg[1]);
     }
     
 }
 
 void ofApp::onClose(ofxLibwebsockets::Event & e){
-    
+    cout<<"disconnected!"<<endl;
     
 }
 

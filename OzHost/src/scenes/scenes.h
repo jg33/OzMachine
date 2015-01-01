@@ -11,5 +11,6 @@
 
 #include "twinkleScene.h"
 #include "NoPlaceScene.h"
+#include "SyncScene.h"
 
 #endif

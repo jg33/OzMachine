@@ -11,19 +11,38 @@
 
 #include <stdio.h>
 #include "ofxAppUtils.h"
+#include "ofMain.h"
+
+class Home;
 
 class NoPlaceScene: public ofxScene{
     
 public:
-    NoPlaceScene():ofxScene("NoPlace"){};
+    NoPlaceScene():ofxScene("NoPlace"){setup();};
     void setup();
-    void update();
+    void update(){};
     void draw();
+    
+    void addHome(string home);
     
 private:
     
+    vector<Home> homes;
+    ofTrueTypeFont font;
     
 };
 
+class Home{
+public:
+    Home(string _text);
+    Home(string _text, ofTrueTypeFont * _fontRef);
+    
+    void draw();
+private:
+    string text;
+    ofPoint loc;
+    ofTrueTypeFont * fontRef;
+    
+};
 
 #endif /* defined(__OzHost__NoPlaceScene__) */
