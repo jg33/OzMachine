@@ -96,21 +96,11 @@ void ofApp::onMessage(ofxLibwebsockets::Event & e){
         twinkle->triggerPulse(ofToInt(msg[1]));
     } else if (msg[0] =="/welcome"){
         socket.send("/imHost");
+        switchScene(ofToInt(msg[1]));
 
     } else if (msg[0] == "/sceneChange" ){
-        switch (ofToInt(msg[1])){
-            case 4:
-                sm.gotoScene("sync");
-                break;
-            case 5:
-                sm.gotoScene("NoPlace");
-                break;
-            case 6:
-                sm.gotoScene("twinkle");
-                break;
-            default:
-                cout<<"scene changed to empty scene: "<<msg[1]<<endl;
-        }
+        switchScene(ofToInt(msg[1]));
+        
     } else if(msg[0] == "/home"){
         noPlace->addHome(msg[1]);
     }
@@ -127,6 +117,22 @@ void ofApp::onGuiEvent(guiCallbackData & d){
 void ofApp::onClose(ofxLibwebsockets::Event & e){
     cout<<"disconnected!"<<endl;
     
+}
+
+void ofApp::switchScene(int scene){
+    switch (scene){
+        case 4:
+            sm.gotoScene("sync");
+            break;
+        case 5:
+            sm.gotoScene("NoPlace");
+            break;
+        case 6:
+            sm.gotoScene("twinkle");
+            break;
+        default:
+            cout<<"scene changed to empty scene: "<<scene<<endl;
+    }
 }
 
 

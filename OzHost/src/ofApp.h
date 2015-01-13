@@ -38,7 +38,8 @@ class ofApp : public ofxApp{
     
     void onGuiEvent(guiCallbackData & d);
 
-		
+    void switchScene(int scene);
+    
 private:
     //ofxLibwebsockets::Server socket;
     ofxLibwebsockets::Client socket;

@@ -2,38 +2,31 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetOrientation(OF_ORIENTATION_90_RIGHT);//Set iOS to Orientation Landscape Right
+    socket.connect("192.168.1.70", 6666);
+    socket.addListener(this);
     
-    ofSetFrameRate(30);
+    keyboard = new ofxiOSKeyboard(2,500,320,32);
+    keyboard->setBgColor(255, 255, 255, 255);
+    keyboard->setFontColor(0,0,0, 255);
+    keyboard->setFontSize(26);
+    keyboard->setPosition(40, 200);
     
-    grabber.initGrabber(1280, 720, OF_PIXELS_BGRA);
-    camTex.allocate(grabber.getWidth(), grabber.getHeight(), GL_RGB);
-    
-    pix = new unsigned char[ (int)( grabber.getWidth() * grabber.getHeight() * 3.0) ];
-    
+    setSceneManager(&manager);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    grabber.update();
-    
-    if (grabber.isFrameNew()) {
-        camTex = grabber.getTextureReference();
-        //camTex.loadData(grabber.getPixels(), 1280, 720, GL_RGB);
+    keyboard->setVisible(true);
 
-    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofBackground(0, 0, 0);
-        
-    camTex.draw(0,0);
-
-    ofDrawBitmapString("TEXT", ofPoint(ofGetWidth()/2, ofGetHeight()/2));
+    ofSetColor(0, 255);
+    ofDrawBitmapString("tap the textfield to open the keyboard", 2, 35);
     
-        
-
+    ofSetColor(20, 160, 240, 255);
+    ofDrawBitmapString("text entered = "+  keyboard->getText() , 2, 100);
 }
 
 //--------------------------------------------------------------
@@ -43,7 +36,7 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::touchDown(ofTouchEventArgs & touch){
-
+    socket.send("butts");
 }
 
 //--------------------------------------------------------------

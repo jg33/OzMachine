@@ -1,2 +1,6 @@
 ofxHTTP
 ofxIO
+ofxLibwebsockets
+ofxMediaType
+ofxSSLManager
+ofxTaskQueue
