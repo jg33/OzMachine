@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAppUtils.h"
+//#include "ofxControlPanel.h"
 
 #include "scenes.h"
 
@@ -34,6 +35,9 @@ class ofApp : public ofxApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    void onGuiEvent(guiCallbackData & d);
+
 		
 private:
     //ofxLibwebsockets::Server socket;
@@ -42,7 +46,7 @@ private:
     int startTime, localTime, remoteTime;
     int retryCounter, retryAfter;
     
-
+    //ofxControlPanel controls;
     
     void resync(int time){
         localTime = time;
@@ -53,4 +57,6 @@ private:
     ofxSceneManager sm;
     twinkleScene * twinkle;
     NoPlaceScene * noPlace;
+    
+    vector<string> sceneNames;
 };

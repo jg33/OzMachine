@@ -15,7 +15,7 @@ void ofApp::setup(){
     ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
     options.port = 14949;
     options.bUseSSL = false;
-    options.host = "localhost";
+    options.host = "127.0.0.1";
     socket.connect(options);
     socket.addListener(this);
     
@@ -30,7 +30,27 @@ void ofApp::setup(){
     sm.add(new SyncScene(&localTime));
     sm.gotoScene("NoPlace");
 
+    ///// Scenes n control panel
+    sceneNames.push_back("scene 0");
+    sceneNames.push_back("scene 1");
+    sceneNames.push_back("scene 2");
+    sceneNames.push_back("scene 3");
+    sceneNames.push_back("sync");
+    sceneNames.push_back("no place");
+    sceneNames.push_back("twinkle");
+
+
     
+    setDrawControlPanel(true);
+    
+    controlPanel.addPanel("Scene Control", 1);
+    controlPanel.setWhichPanel("Scene Control");
+    controlPanel.addTextDropDown("Scene", "scene", 0, sceneNames);
+    controlPanel.setupEvents();
+    controlPanel.enableEvents();
+    ofAddListener(controlPanel.guiEvent, this, &ofApp::onGuiEvent);
+    bDebug = true;
+
 }
 
 //--------------------------------------------------------------
@@ -38,7 +58,7 @@ void ofApp::update(){
     localTime = ofGetElapsedTimeMillis()-startTime;
     
     if (!socket.isConnected() && retryCounter>retryAfter) {
-        socket.connect("localhost");
+        socket.connect("127.0.0.1");
         retryCounter=0;
     } else if (!socket.isConnected() && retryCounter < retryAfter){
         retryCounter++;
@@ -51,10 +71,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    //ofBackground(0);
+    popTransforms();
     sm.draw();
     
-   
+    //if(bDebug) drawControlPanel();
 }
 
 void ofApp::onConnect(ofxLibwebsockets::Event & e){
@@ -96,6 +117,13 @@ void ofApp::onMessage(ofxLibwebsockets::Event & e){
     
 }
 
+void ofApp::onGuiEvent(guiCallbackData & d){
+    if(d.getDisplayName() == "Scene"){
+        socket.send("/setScene " +d.getString(0));
+        
+    }
+}
+
 void ofApp::onClose(ofxLibwebsockets::Event & e){
     cout<<"disconnected!"<<endl;
     
@@ -104,11 +132,13 @@ void ofApp::onClose(ofxLibwebsockets::Event & e){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    
+    
     if(key>48 && key< 58){
+        /*
         int scene = key-48;
         socket.send("/setScene "+ ofToString(scene));
-        
+        */
     } else{
         switch(key){
             case('r'):
@@ -123,6 +153,9 @@ void ofApp::keyPressed(int key){
                 } catch(...){
                     
                 }
+            case('d'):
+                bDebug = !bDebug;
+                break;
             default:
                 break;
                 
