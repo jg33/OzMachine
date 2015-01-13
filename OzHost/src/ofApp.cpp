@@ -2,6 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    retryAfter = 100;
     ofSetVerticalSync(true);
     
     /* IF SERVER?
@@ -12,7 +13,7 @@ void ofApp::setup(){
     socket.addListener(this);
      */
     
-    ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
+
     options.port = 14949;
     options.bUseSSL = false;
     options.host = "127.0.0.1";
@@ -58,9 +59,11 @@ void ofApp::update(){
     localTime = ofGetElapsedTimeMillis()-startTime;
     
     if (!socket.isConnected() && retryCounter>retryAfter) {
-        socket.connect("127.0.0.1");
+        cout<<"retrying!"<<endl;
+        socket.connect(options);
         retryCounter=0;
-    } else if (!socket.isConnected() && retryCounter < retryAfter){
+    } else if (!socket.isConnected() && retryCounter <= retryAfter){
+        cout<<"plus "<<retryCounter<<endl;
         retryCounter++;
     }
     ofSetWindowTitle("ozHost | fps: " + ofToString(ofGetFrameRate()) );
@@ -116,7 +119,7 @@ void ofApp::onGuiEvent(guiCallbackData & d){
 
 void ofApp::onClose(ofxLibwebsockets::Event & e){
     cout<<"disconnected!"<<endl;
-    
+    retryCounter = 0;
 }
 
 void ofApp::switchScene(int scene){

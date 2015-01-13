@@ -43,6 +43,7 @@ class ofApp : public ofxApp{
 private:
     //ofxLibwebsockets::Server socket;
     ofxLibwebsockets::Client socket;
+    ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
     
     int startTime, localTime, remoteTime;
     int retryCounter, retryAfter;
