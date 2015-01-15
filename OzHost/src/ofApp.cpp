@@ -39,6 +39,25 @@ void ofApp::setup(){
     sceneNames.push_back("sync");
     sceneNames.push_back("no place");
     sceneNames.push_back("twinkle");
+    sceneNames.push_back("scene 8");
+    sceneNames.push_back("scene 9");
+    sceneNames.push_back("scene 10");
+    sceneNames.push_back("scene 11");
+    sceneNames.push_back("scene 12");
+    sceneNames.push_back("scene 13");
+    sceneNames.push_back("scene 14");
+    sceneNames.push_back("scene 15");
+    sceneNames.push_back("scene 16");
+    sceneNames.push_back("scene 17");
+    sceneNames.push_back("scene 18");
+    sceneNames.push_back("scene 19");
+    sceneNames.push_back("scene 20");
+    sceneNames.push_back("scene 21");
+    sceneNames.push_back("scene 22");
+    sceneNames.push_back("scene 23");
+    sceneNames.push_back("scene 24");
+    sceneNames.push_back("scene 25");
+    sceneNames.push_back("scene 26");
 
 
     
