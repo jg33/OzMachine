@@ -39,13 +39,14 @@ void ofApp::setup(){
     sceneNames.push_back("sync");
     sceneNames.push_back("no place");
     sceneNames.push_back("twinkle");
-    sceneNames.push_back("scene 8");
-    sceneNames.push_back("scene 9");
-    sceneNames.push_back("scene 10");
-    sceneNames.push_back("scene 11");
-    sceneNames.push_back("scene 12");
-    sceneNames.push_back("scene 13");
-    sceneNames.push_back("scene 14");
+    sceneNames.push_back("testCube");
+    sceneNames.push_back("cyclone");
+    sceneNames.push_back("munchkinland");
+    sceneNames.push_back("dialogue 1");
+    sceneNames.push_back("dialogue 2");
+    sceneNames.push_back("dialogue 3");
+    sceneNames.push_back("dialogue 4");
+    sceneNames.push_back("dialogue 5");
     sceneNames.push_back("scene 15");
     sceneNames.push_back("scene 16");
     sceneNames.push_back("scene 17");
@@ -132,6 +133,7 @@ void ofApp::onMessage(ofxLibwebsockets::Event & e){
 void ofApp::onGuiEvent(guiCallbackData & d){
     if(d.getDisplayName() == "Scene"){
         socket.send("/setScene " +d.getString(0));
+        currentScene = ofToInt(d.getString(0));
         
     }
 }
@@ -183,6 +185,10 @@ void ofApp::keyPressed(int key){
                 }
             case('d'):
                 bDebug = !bDebug;
+                break;
+            case(' '):
+                currentScene++;
+                socket.send("/setScene " + ofToString(currentScene) );
                 break;
             default:
                 break;

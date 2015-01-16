@@ -61,4 +61,5 @@ private:
     NoPlaceScene * noPlace;
     
     vector<string> sceneNames;
+    int currentScene = 0;
 };
