@@ -17,19 +17,45 @@ socketServer.on('connection', function(client) {
     client.on('message', function(message) {
         console.log('received: %s', message);
         console.log('from: %s', clients.indexOf(client));
-		if(message.split(' ')[0]=="/setScene"){
+		
+		var msgArray = message.split(' ');
+		
+		if(msgArray[0]=="/setScene"){
 			setScene(message.split(' ')[1] );
-		} else if(message.split(' ')[0] =="/getScene"){
+		} else if(msgArray[0] =="/getScene"){
 			client.send("/scene "+currentScene);
-		} else if(message.split(' ')[0] =="/ping"){
+		} else if(msgArray[0] =="/ping"){
 			client.send("/ping a-ok! Scene: "+currentScene+" Time: "+ masterTime );
-		} else if (message.split(' ')[0] =="/imHost"){
+		} else if (msgArray[0] =="/imHost"){
 			ozHost = client;
 			ozHost.send("ok- you're hosting");
-		} else if (message.split(' ')[0] =="/tap"){
+		} else if (msgArray[0] =="/tap"){
 			ozHost.send("/trigger "+ clients.indexOf(client));
-		} else if (message.split(' ')[0] =="/home"){
-			ozHost.send("/home "+ message.split(' ')[1]);
+		} else if (msgArray[0] =="/home"){
+			ozHost.send("/home "+ msgArray[1]);
+		} else if(msgArray[0] == "/broadcast"){
+			socketServer.broadcast(msgArray[1]);
+		} else {
+			var splitAddress = msgArray[0].split('/');
+			
+			if(splitAddress[0] == "clientInfo"){
+				if(splitAddress[1] == "firstName"){
+					//clients[clients.indexOf(client))].firstName = msgArray[1];
+				} else if(splitAddress[1] == "lastName"){
+					//clients[clients.indexOf(client))].lastName = msgArray[1];
+					
+				} else if(splitAddress[1] == "row"){
+					//clients[clients.indexOf(client))].row = msgArray[1];
+					
+				} else if(splitAddress[1] == "number"){
+					//clients[clients.indexOf(client))].number = msgArray[1];
+					
+				} else if(splitAddress[1] == "deviceID"){
+
+				}
+				
+			}
+						
 		}
 		
     });
@@ -44,7 +70,7 @@ masterTime = startTime;
 var update = function(){
 	date = new Date();
 	masterTime = date.getTime() - startTime;
-	socketServer.broadcast("/time "+ masterTime );
+	socketServer.broadcast("/update "+ masterTime +" "+currentScene);
 	//console.log('sent: '+ date.getTime())
 }
 
@@ -71,9 +97,19 @@ prompt.get('scene',function(err,result){
 	setScene(result.scene);
 })
 
+function saveClientInfo(){
+
+
+}
+
+function loadClientInfo(){
+	
+}
+
 
 socketServer.broadcast = function broadcast(data) {
   for(var i in this.clients) {
     this.clients[i].send(data);
   }
 };
+
